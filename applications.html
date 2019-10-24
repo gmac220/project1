@@ -1,0 +1,9 @@
+<h1>These are your downloaded programs</h1>
+<table>
+    <tr>
+        <th>Installed Programs</th>
+    </tr>
+    <tr>
+        <td>{{range $programs := .Progs}} {{$programs}} {{end}}</td>
+    </tr>
+</table>

@@ -2,8 +2,14 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"net/http"
 	"os/exec"
 )
+
+type Programs struct {
+	Progs []string
+}
 
 func main() {
 	// memStats := new(runtime.MemStats)
@@ -19,22 +25,35 @@ func main() {
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
+
+	// cdProj1 := exec.Command("cd", "~/go/src/github.com/gmac220/project1")
+	// cdProj1.Run()
+	http.HandleFunc("/", IndexHandler)
+	http.HandleFunc("/progs/", ProgsHandler)
+	http.ListenAndServe(":8000", nil)
+}
+
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<h1>Hello there</h1>")
+}
+
+func ProgsHandler(w http.ResponseWriter, r *http.Request) {
 	lsUsr := exec.Command("ls", "/usr/bin")
 	lsOutput, stderr := lsUsr.Output()
-	programs := make([]string, 1)
+	p := Programs{Progs: make([]string, 1)}
 	var count int = 0
 	if stderr != nil {
 		fmt.Println(stderr)
 	}
 	for i := 0; i < len(lsOutput); i++ {
 		if lsOutput[i] != 10 {
-			programs[count] += string(lsOutput[i])
+			p.Progs[count] += string(lsOutput[i])
 		} else {
 			count++
-			programs = append(programs, "")
+			p.Progs = append(p.Progs, "")
 		}
 	}
-	fmt.Println(programs)
-	// cdProj1 := exec.Command("cd", "~/go/src/github.com/gmac220/project1")
-	// cdProj1.Run()
+	// fmt.Println(p.Progs)
+	t, _ := template.ParseFiles("applications.html")
+	t.Execute(w, p)
 }
