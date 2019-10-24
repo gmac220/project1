@@ -30,7 +30,7 @@ func main() {
 	// cdProj1.Run()
 	http.HandleFunc("/", IndexHandler)
 	http.HandleFunc("/progs/", ProgsHandler)
-	http.ListenAndServe(":8000", nil)
+	http.ListenAndServe(":80", nil)
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
