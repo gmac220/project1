@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"net/url"
 	"os/exec"
 )
 
+// Programs contains list of downloaded programs and the current program selected by the user.
 type Programs struct {
-	Progs []string
+	Progs    []string
+	CurrProg string
 }
 
 func main() {
@@ -30,13 +33,15 @@ func main() {
 	// cdProj1.Run()
 	http.HandleFunc("/", IndexHandler)
 	http.HandleFunc("/progs/", ProgsHandler)
+	http.HandleFunc("/currProg", CurrProgHandler)
 	http.ListenAndServe(":80", nil)
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>Hello there</h1>")
+	fmt.Fprintf(w, "<a href=\"/progs/\"> Downloaded applications</a>")
 }
 
+// ProgsHandler lists out all the programs by the user in /usr/bin
 func ProgsHandler(w http.ResponseWriter, r *http.Request) {
 	lsUsr := exec.Command("ls", "/usr/bin")
 	lsOutput, stderr := lsUsr.Output()
@@ -53,7 +58,18 @@ func ProgsHandler(w http.ResponseWriter, r *http.Request) {
 			p.Progs = append(p.Progs, "")
 		}
 	}
-	// fmt.Println(p.Progs)
 	t, _ := template.ParseFiles("applications.html")
+	t.Execute(w, p)
+}
+
+// CurrProgHandler passes the current program selected by the user
+func CurrProgHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("choice.html")
+	u, err := url.Parse(r.URL.String())
+	if err != nil {
+		panic(err)
+	}
+	m, _ := url.ParseQuery(u.RawQuery)
+	p := Programs{CurrProg: m["application"][0]}
 	t.Execute(w, p)
 }
