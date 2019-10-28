@@ -31,16 +31,13 @@ func main() {
 
 	// cdProj1 := exec.Command("cd", "~/go/src/github.com/gmac220/project1")
 	// cdProj1.Run()
-	http.HandleFunc("/", IndexHandler)
+	http.Handle("/", http.FileServer(http.Dir(".")))
 	http.HandleFunc("/progs/", ProgsHandler)
 	http.HandleFunc("/currProg", CurrProgHandler)
+	http.HandleFunc("/search/", SearchProgHandler)
 	http.HandleFunc("/update", UpdateProgHandler)
 	http.HandleFunc("/uninstall", UninstallProgHandler)
 	http.ListenAndServe(":80", nil)
-}
-
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<a href=\"/progs/\"> Downloaded applications</a>")
 }
 
 // ProgsHandler lists out all the programs by the user in /usr/bin
@@ -61,6 +58,13 @@ func ProgsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	t, _ := template.ParseFiles("applications.html")
+	t.Execute(w, p)
+}
+
+func SearchProgHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("search.html")
+	// r.FormValue()
+	p := Programs{}
 	t.Execute(w, p)
 }
 
