@@ -81,7 +81,9 @@ func SearchProgHandler(w http.ResponseWriter, r *http.Request) {
 		if len(searchOutput) > skipIntro {
 			s.NoResult = true
 			for i := skipIntro; i < len(searchOutput); i++ {
-				if searchOutput[i] != lineFeed && searchOutput[i+1] != lineFeed {
+				if searchOutput[i] != lineFeed {
+					s.Results[count] += string(searchOutput[i])
+				} else if searchOutput[i] != lineFeed && searchOutput[i+1] != lineFeed {
 					s.Results[count] += string(searchOutput[i])
 				} else if searchOutput[i] == lineFeed && searchOutput[i+1] == lineFeed {
 					i++
