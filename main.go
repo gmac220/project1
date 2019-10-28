@@ -106,14 +106,14 @@ func SearchProgHandler(w http.ResponseWriter, r *http.Request) {
 
 // InstallProgHandler installs the program that is passed in
 func InstallProgHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("install.html")
+	t, _ := template.ParseFiles("index.html")
 	u, err := url.Parse(r.URL.String())
 	if err != nil {
 		panic(err)
 	}
 	m, _ := url.ParseQuery(u.RawQuery)
 	installProg := InstallProgram{ProgName: m["pname"][0]}
-	//exec.Command("sudo", "apt", "install", ,"-y", m["application"][0])
+	exec.Command("sudo", "apt", "install", "-y", m["pname"][0]).Run()
 	t.Execute(w, installProg)
 }
 
@@ -131,26 +131,26 @@ func CurrProgHandler(w http.ResponseWriter, r *http.Request) {
 
 // UpgradeProgHandler upgrades the program to the latest version in apt
 func UpgradeProgHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("upgrade.html")
+	t, _ := template.ParseFiles("index.html")
 	u, err := url.Parse(r.URL.String())
 	if err != nil {
 		panic(err)
 	}
 	m, _ := url.ParseQuery(u.RawQuery)
 	p := Programs{CurrProg: m["application"][0]}
-	//exec.Command("sudo", "apt", "upgrade", "-y", m["application"][0])
+	exec.Command("sudo", "apt", "upgrade", "-y", m["application"][0]).Run()
 	t.Execute(w, p)
 }
 
 // UninstallProgHandler removes the program that is passed in
 func UninstallProgHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("uninstall.html")
+	t, _ := template.ParseFiles("index.html")
 	u, err := url.Parse(r.URL.String())
 	if err != nil {
 		panic(err)
 	}
 	m, _ := url.ParseQuery(u.RawQuery)
 	p := Programs{CurrProg: m["application"][0]}
-	//exec.Command("sudo", "apt", "remove", "-y", m["application"][0])
+	exec.Command("sudo", "apt", "remove", "-y", m["application"][0]).Run()
 	t.Execute(w, p)
 }
