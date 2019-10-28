@@ -34,6 +34,8 @@ func main() {
 	http.HandleFunc("/", IndexHandler)
 	http.HandleFunc("/progs/", ProgsHandler)
 	http.HandleFunc("/currProg", CurrProgHandler)
+	http.HandleFunc("/update", UpdateProgHandler)
+	http.HandleFunc("/uninstall", UninstallProgHandler)
 	http.ListenAndServe(":80", nil)
 }
 
@@ -65,6 +67,28 @@ func ProgsHandler(w http.ResponseWriter, r *http.Request) {
 // CurrProgHandler passes the current program selected by the user
 func CurrProgHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("choice.html")
+	u, err := url.Parse(r.URL.String())
+	if err != nil {
+		panic(err)
+	}
+	m, _ := url.ParseQuery(u.RawQuery)
+	p := Programs{CurrProg: m["application"][0]}
+	t.Execute(w, p)
+}
+
+func UpdateProgHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("update.html")
+	u, err := url.Parse(r.URL.String())
+	if err != nil {
+		panic(err)
+	}
+	m, _ := url.ParseQuery(u.RawQuery)
+	p := Programs{CurrProg: m["application"][0]}
+	t.Execute(w, p)
+}
+
+func UninstallProgHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("uninstall.html")
 	u, err := url.Parse(r.URL.String())
 	if err != nil {
 		panic(err)

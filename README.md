@@ -5,7 +5,7 @@ AppCheck is a web application that has an html frontend and a Go backend. It let
 # User Stories
 - [] Users should be able to:
     - [x] See a list of application downloads in their linux OS
-    - [] Click on a downloaded application on the list and upgrade it
+    - [] Click on a downloaded application on the list and update it
     - [] Click on a downloaded application on the list and uninstall it
     - [] Search up an application
     - [] Install an application
