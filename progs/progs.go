@@ -25,7 +25,7 @@ func ProgsHandler(w http.ResponseWriter, r *http.Request) {
 	if stderr != nil {
 		fmt.Println(stderr)
 	}
-	for i := 1; i < len(lsOutput); i++ {
+	for i := 0; i < len(lsOutput); i++ {
 		if lsOutput[i] != 10 {
 			p.Progs[count] += string(lsOutput[i])
 		} else {
