@@ -5,10 +5,17 @@ AppCheck is a web application that has an html frontend and a Go backend. It let
 # User Stories
 - [] Users should be able to:
     - [x] See a list of application downloads in their linux OS
-    - [] Click on a downloaded application on the list and update it
-    - [] Click on a downloaded application on the list and uninstall it
+    - [x] Click on a downloaded application on the list and upgrade it
+    - [x] Click on a downloaded application on the list and uninstall it
     - [x] Search up an application
-    - [] Install an application
+    - [x] Install an application
     - [] See the current version of the application clicked
 - [] The system should be able to tell what kind of linux environment its in to see if it will use apt or yums
 - [] When running on a EC2 instance make a script that automatically runs the file on startup(currently runs when you ssh into the EC2 instance)
+
+# Instructions
+```bash
+git clone https://github.com/gmac220/project1
+sudo go run main.go
+On browser put localhost on the url
+```
