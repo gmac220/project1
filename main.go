@@ -14,9 +14,13 @@ type Programs struct {
 	CurrProg string
 }
 
-type SearchProg struct {
+type SearchProgram struct {
 	Results  []string
 	NoResult bool
+}
+
+type InstallProgram struct {
+	ProgName string
 }
 
 func main() {
@@ -39,6 +43,7 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir(".")))
 	http.HandleFunc("/progs/", ProgsHandler)
 	http.HandleFunc("/currProg", CurrProgHandler)
+	http.HandleFunc("/install", InstallProgHandler)
 	http.HandleFunc("/search/", SearchProgHandler)
 	http.HandleFunc("/update", UpdateProgHandler)
 	http.HandleFunc("/uninstall", UninstallProgHandler)
@@ -47,10 +52,12 @@ func main() {
 
 // ProgsHandler lists out all the programs by the user in /usr/bin
 func ProgsHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("applications.html")
 	lsUsr := exec.Command("ls", "/usr/bin")
 	lsOutput, stderr := lsUsr.Output()
 	p := Programs{Progs: make([]string, 1)}
 	var count int = 0
+
 	if stderr != nil {
 		fmt.Println(stderr)
 	}
@@ -62,38 +69,59 @@ func ProgsHandler(w http.ResponseWriter, r *http.Request) {
 			p.Progs = append(p.Progs, "")
 		}
 	}
-	t, _ := template.ParseFiles("applications.html")
+
 	t.Execute(w, p)
 }
 
 // SearchProgHandler searches apt
 func SearchProgHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("search.html")
-	s := SearchProg{Results: make([]string, 1), NoResult: false}
+	s := SearchProgram{Results: make([]string, 1), NoResult: false}
 	searchVal := r.FormValue("pname")
-	usrSearch := exec.Command("apt", "search", searchVal)
-	searchOutput, stderr := usrSearch.Output()
-	// fmt.Println(string(searchOutput))
-	// fmt.Println(len(searchOutput))
 	var count int = 0
 	var skipIntro int = 30
-	var carriageReturn byte = 13
-	if stderr != nil {
-		fmt.Println(stderr)
-	}
-	if len(searchOutput) > skipIntro {
-		s.NoResult = true
-	}
-	for i := skipIntro; i < len(searchOutput); i++ {
-		if searchOutput[i] != carriageReturn {
-			s.Results[count] += string(searchOutput[i])
-		} else {
-			count++
-			s.Results = append(s.Results, "")
+	// var carriageReturn byte = 10
+	if searchVal != "" {
+		usrSearch := exec.Command("apt", "search", searchVal)
+		searchOutput, stderr := usrSearch.Output()
+		if stderr != nil {
+			fmt.Println(stderr)
 		}
+		if len(searchOutput) > skipIntro {
+			s.NoResult = true
+		}
+		for i := skipIntro; i < len(searchOutput); i++ {
+			if searchOutput[i] != 10 && (searchOutput[i] != 10 && searchOutput[i+1] != 10) {
+				s.Results[count] += string(searchOutput[i])
+			} else if searchOutput[i] == 10 && searchOutput[i+1] == 10 {
+				i++
+			} else if searchOutput[i] == 10 && searchOutput[i+1] == 32 {
+				s.Results[count] += string(searchOutput[i])
+			} else {
+				count++
+				//fmt.Println("This is count" + strconv.Itoa(count))
+				s.Results = append(s.Results, "")
+			}
+		}
+		// fmt.Println(searchOutput)
 	}
-	fmt.Println(s.Results)
+
+	// fmt.Println(string(searchOutput))
+	// fmt.Println(len(searchOutput))
+
+	//fmt.Println(s.Results)
 	t.Execute(w, s)
+}
+
+func InstallProgHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("install.html")
+	u, err := url.Parse(r.URL.String())
+	if err != nil {
+		panic(err)
+	}
+	m, _ := url.ParseQuery(u.RawQuery)
+	installProg := InstallProgram{ProgName: m["pname"][0]}
+	t.Execute(w, installProg)
 }
 
 // CurrProgHandler passes the current program selected by the user
@@ -116,6 +144,7 @@ func UpdateProgHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	m, _ := url.ParseQuery(u.RawQuery)
 	p := Programs{CurrProg: m["application"][0]}
+	//exec.Command("apt", "update", m["application"][0])
 	t.Execute(w, p)
 }
 
@@ -127,5 +156,6 @@ func UninstallProgHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	m, _ := url.ParseQuery(u.RawQuery)
 	p := Programs{CurrProg: m["application"][0]}
+	//exec.Command("apt", "uninstall", m["application"][0])
 	t.Execute(w, p)
 }
