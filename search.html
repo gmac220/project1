@@ -1,11 +1,11 @@
 
 <!DOCTYPE html>
 <html class="bg-dark text-white">
-    <form class="bg-dark text-white">
+    <form class="bg-dark text-white" method="GET" action="/search">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <div class="form-group">
             <label for="exampleInputEmail1">What program do you want to look for:</label>
-            <input type="program" class="form-control" id="programs" placeholder="Program Name">
+            <input type="text" class="form-control" id="programs" placeholder="Program Name" name="pname">
         </div>
         <button type="submit" class="btn btn-primary">search</button>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

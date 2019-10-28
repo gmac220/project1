@@ -14,6 +14,11 @@ type Programs struct {
 	CurrProg string
 }
 
+type SearchProg struct {
+	Results  []string
+	NoResult bool
+}
+
 func main() {
 	// memStats := new(runtime.MemStats)
 	// runtime.ReadMemStats(memStats)
@@ -61,11 +66,34 @@ func ProgsHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, p)
 }
 
+// SearchProgHandler searches apt
 func SearchProgHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("search.html")
-	// r.FormValue()
-	p := Programs{}
-	t.Execute(w, p)
+	s := SearchProg{Results: make([]string, 1), NoResult: false}
+	searchVal := r.FormValue("pname")
+	usrSearch := exec.Command("apt", "search", searchVal)
+	searchOutput, stderr := usrSearch.Output()
+	// fmt.Println(string(searchOutput))
+	// fmt.Println(len(searchOutput))
+	var count int = 0
+	var skipIntro int = 30
+	var carriageReturn byte = 13
+	if stderr != nil {
+		fmt.Println(stderr)
+	}
+	if len(searchOutput) > skipIntro {
+		s.NoResult = true
+	}
+	for i := skipIntro; i < len(searchOutput); i++ {
+		if searchOutput[i] != carriageReturn {
+			s.Results[count] += string(searchOutput[i])
+		} else {
+			count++
+			s.Results = append(s.Results, "")
+		}
+	}
+	fmt.Println(s.Results)
+	t.Execute(w, s)
 }
 
 // CurrProgHandler passes the current program selected by the user
