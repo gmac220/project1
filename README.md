@@ -3,13 +3,13 @@
 AppCheck is a web application that has an html frontend and a Go backend. It lets you see what applications you currently have installed in your Ubuntu or Debian machine.
 
 # User Stories
-- [] Users should be able to:
+- [x] Users should be able to:
     - [x] See a list of application downloads in their linux OS
     - [x] Click on a downloaded application on the list and upgrade it
     - [x] Click on a downloaded application on the list and uninstall it
     - [x] Search up an application
     - [x] Install an application
-    - [] See the current version of the application clicked
+    - [x] See the current version of the application clicked
 - [] When running on a EC2 instance make a script that automatically runs the file on startup(currently runs when you ssh into the EC2 instance)
 
 # Instructions

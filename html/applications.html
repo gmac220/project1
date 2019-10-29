@@ -35,8 +35,8 @@
             }
         </style> -->
     </head>
-    <body>
-        <a type="button" class="btn btn-primary btn-lg btn-block" href="../">Home</a>
+    <body class="bg-dark text-white">
+        <h1><a href="/"><span class="badge badge-info">AppCheck</span></a></h1>
         <table class="table table-hover table-striped table-dark">
             <thead>
               <tr>
@@ -46,7 +46,7 @@
             <tbody>
                 {{range .Progs}} 
                 <tr>
-                    <td><a href="../currProg?application={{.}}">{{.}}</a></td>
+                    <td><a href="../currProg?application={{.}}" class="badge badge-info">{{.}}</a></td>
                 </tr>
                 {{end}}
             </tbody>
