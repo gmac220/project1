@@ -37,7 +37,8 @@
         </style> -->
     </head>
     <body>
-        <h1>{{.CurrProg}} {{.Version}}</h1>
+        <h1><a href="/"><span class="badge badge-info">{{.CurrProg}}</span></a></h1>
+        <h4>{{.Version}}</h4>
         <a href="../upgrade?application={{.CurrProg}}"><button type="button" class="btn btn-outline-success btn-lg btn-block" >Upgrade</button></a>
         <a href="../uninstall?application={{.CurrProg}}"><button type="button" class="btn btn-outline-danger btn-lg btn-block">Uninstall</button></a>
         <a href="../progs/"><button type="button" class="btn btn-outline-info btn-lg btn-block">Programs</button></a>
