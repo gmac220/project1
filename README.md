@@ -14,7 +14,7 @@ AppCheck is a web application that has an html frontend and a Go backend. It let
 
 # Instructions
 ```bash
-git clone https://github.com/gmac220/project1
+git clone https://github.com/gmac220/project1.git
 sudo go run main.go
 On browser put localhost on the url
 ```
