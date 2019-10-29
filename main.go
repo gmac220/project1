@@ -8,11 +8,6 @@ import (
 )
 
 func main() {
-	// fmt.Println("arc", runtime.GOARCH)
-	// fmt.Println("os", runtime.GOOS)
-	// fmt.Println("go root", runtime.GOROOT())
-	// fmt.Println("cpus", strconv.Itoa(runtime.NumCPU()))
-
 	http.Handle("/", http.FileServer(http.Dir(".")))
 	http.HandleFunc("/progs/", progs.ProgramHandler)
 	http.HandleFunc("/currProg", progs.CurrProgHandler)
