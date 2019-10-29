@@ -12,10 +12,11 @@ import (
 type Programs struct {
 	Progs    []string
 	CurrProg string
+	Version  string
 }
 
 // ProgsHandler lists out all the programs by the user in /usr/bin
-func ProgsHandler(w http.ResponseWriter, r *http.Request) {
+func ProgramHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("html/applications.html")
 	lsUsr := exec.Command("ls", "/usr/bin")
 	lsOutput, stderr := lsUsr.Output()
@@ -45,7 +46,17 @@ func CurrProgHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	m, _ := url.ParseQuery(u.RawQuery)
-	p := Programs{CurrProg: m["application"][0]}
+	version := exec.Command(m["application"][0], "--version")
+	verOutput, stderr := version.Output()
+	p := Programs{CurrProg: m["application"][0], Version: ""}
+	if stderr != nil {
+		fmt.Println(stderr)
+	}
+	if string(verOutput) != "" {
+		for i := 0; verOutput[i] != 10; i++ {
+			p.Version += string(verOutput[i])
+		}
+	}
 	t.Execute(w, p)
 }
 

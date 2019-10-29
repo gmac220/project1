@@ -14,7 +14,7 @@ func main() {
 	// fmt.Println("cpus", strconv.Itoa(runtime.NumCPU()))
 
 	http.Handle("/", http.FileServer(http.Dir(".")))
-	http.HandleFunc("/progs/", progs.ProgsHandler)
+	http.HandleFunc("/progs/", progs.ProgramHandler)
 	http.HandleFunc("/currProg", progs.CurrProgHandler)
 	http.HandleFunc("/install", search.InstallProgHandler)
 	http.HandleFunc("/search/", search.ProgHandler)
