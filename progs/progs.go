@@ -15,7 +15,7 @@ type Programs struct {
 	Version  string
 }
 
-// ProgsHandler lists out all the programs by the user in /usr/bin
+// ProgramHandler lists out all the programs by the user in /usr/bin
 func ProgramHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("html/applications.html")
 	lsUsr := exec.Command("ls", "/usr/bin")
@@ -40,12 +40,7 @@ func ProgramHandler(w http.ResponseWriter, r *http.Request) {
 
 // CurrProgHandler passes the current program selected by the user
 func CurrProgHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("html/choice.html")
-	u, err := url.Parse(r.URL.String())
-	if err != nil {
-		panic(err)
-	}
-	m, _ := url.ParseQuery(u.RawQuery)
+	t, m := ParseHTMLQuery("html/choice.html", r)
 	version := exec.Command(m["application"][0], "--version")
 	verOutput, stderr := version.Output()
 	p := Programs{CurrProg: m["application"][0], Version: ""}
@@ -62,7 +57,23 @@ func CurrProgHandler(w http.ResponseWriter, r *http.Request) {
 
 // UpgradeProgHandler upgrades the program to the latest version in apt
 func UpgradeProgHandler(w http.ResponseWriter, r *http.Request) {
-	t, fErr := template.ParseFiles("index.html")
+	t, m := ParseHTMLQuery("index.html", r)
+	p := Programs{CurrProg: m["application"][0]}
+	exec.Command("sudo", "apt", "upgrade", "-y", m["application"][0]).Run()
+	t.Execute(w, p)
+}
+
+// UninstallProgHandler removes the program that is passed in
+func UninstallProgHandler(w http.ResponseWriter, r *http.Request) {
+	t, m := ParseHTMLQuery("index.html", r)
+	p := Programs{CurrProg: m["application"][0]}
+	exec.Command("sudo", "apt", "purge", "-y", m["application"][0]).Run()
+	t.Execute(w, p)
+}
+
+// ParseHTMLQuery parses query values from url
+func ParseHTMLQuery(html string, r *http.Request) (*template.Template, url.Values) {
+	t, fErr := template.ParseFiles(html)
 	if fErr != nil {
 		panic(fErr)
 	}
@@ -74,20 +85,6 @@ func UpgradeProgHandler(w http.ResponseWriter, r *http.Request) {
 	if qErr != nil {
 		panic(qErr)
 	}
-	p := Programs{CurrProg: m["application"][0]}
-	exec.Command("sudo", "apt", "upgrade", "-y", m["application"][0]).Run()
-	t.Execute(w, p)
-}
 
-// UninstallProgHandler removes the program that is passed in
-func UninstallProgHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("index.html")
-	u, err := url.Parse(r.URL.String())
-	if err != nil {
-		panic(err)
-	}
-	m, _ := url.ParseQuery(u.RawQuery)
-	p := Programs{CurrProg: m["application"][0]}
-	exec.Command("sudo", "apt", "purge", "-y", m["application"][0]).Run()
-	t.Execute(w, p)
+	return t, m
 }
