@@ -9,7 +9,7 @@ by Godfrey Macasero
 ![Image](assets/githubblue.png) Github
 ![Image](assets/vscode.png) Visual Studio Code
 ![Image](assets/goblue.png) Golang
-![Image](assets/html.png) HTML
+![Image](assets/htmllogo.png) HTML
 ![Image](assets/bootstraplogo.png) Bootstrap
 
 ---
