@@ -62,12 +62,18 @@ func CurrProgHandler(w http.ResponseWriter, r *http.Request) {
 
 // UpgradeProgHandler upgrades the program to the latest version in apt
 func UpgradeProgHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("index.html")
-	u, err := url.Parse(r.URL.String())
-	if err != nil {
-		panic(err)
+	t, fErr := template.ParseFiles("index.html")
+	if fErr != nil {
+		panic(fErr)
 	}
-	m, _ := url.ParseQuery(u.RawQuery)
+	u, pErr := url.Parse(r.URL.String())
+	if pErr != nil {
+		panic(pErr)
+	}
+	m, qErr := url.ParseQuery(u.RawQuery)
+	if qErr != nil {
+		panic(qErr)
+	}
 	p := Programs{CurrProg: m["application"][0]}
 	exec.Command("sudo", "apt", "upgrade", "-y", m["application"][0]).Run()
 	t.Execute(w, p)
