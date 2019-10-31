@@ -1,6 +1,6 @@
 # AppCheck
 ## Godfrey Macasero
-AppCheck is a web application that has an html frontend and a Go backend. It lets you see what applications you currently have installed in your Ubuntu or Debian machine.
+AppCheck is a web application that has an html frontend and a Go backend. This application puts a GUI to the apt command. It lets you see what applications you currently have installed in your Ubuntu or Debian machine. You can install, upgrade, or delete files that are in your Ubuntu or Debian machine.
 
 # User Stories
 - [x] Users should be able to:
@@ -13,9 +13,17 @@ AppCheck is a web application that has an html frontend and a Go backend. It let
 - [] When running on a EC2 instance make a script that automatically runs the file on startup(currently runs when you ssh into the EC2 instance)
 
 # Instructions
+## Cloning
 ```bash
 git clone https://github.com/gmac220/project1.git
-sudo go run main.go
-On browser put localhost on the url
+cd project1
 ```
+
+## Running
+```bash
+sudo go run main.go
+```
+## Served up on [localhost](http://localhost)
+Put localhost on your browser or click link above.
+
 ### [Presentation](https://gitpitch.com/gmac220/project1/master)
