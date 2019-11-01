@@ -51,10 +51,6 @@ func ProgHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			s.NoResult = false
 		}
-
-		// fmt.Println(searchOutput)
-		// fmt.Println(string(searchOutput))
-		// fmt.Println(len(searchOutput))
 	}
 	t.Execute(w, s)
 }
